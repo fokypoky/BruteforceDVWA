@@ -148,3 +148,4 @@ CWE (база данных cwe.mitre.org)</h3>
 	}
 
 </p>
+![Alt text](.analyze-result.png)
