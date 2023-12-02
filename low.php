@@ -38,27 +38,29 @@ if( isset( $_GET[ 'Login' ] ) ) {
 		$html .= "<p>Too many requests!</p>";
 	}
 
-	if( $result && mysqli_num_rows( $result ) == 1 ) {
-		// Get users details
-		$row    = mysqli_fetch_assoc( $result );
-		$avatar = $row["avatar"];
-
-		// Login successful
-		$html .= "<p>Welcome to the password protected area {$user}</p>";
-		$html .= "<img src=\"{$avatar}\" />";
-		$visits_count = 0;
-	}
-	else {
-		// Login failed
-		$html .= "<pre><br />Username and/or password incorrect.</pre>";
-		$visits_count = $visits_count + 1;
-	}
-
+	else{
+		if( $result && mysqli_num_rows( $result ) == 1 ) {
+			// Get users details
+			$row    = mysqli_fetch_assoc( $result );
+			$avatar = $row["avatar"];
 	
-	$update_q = "UPDATE visits SET count = $visits_count WHERE ip = '$ip'";
-	$connection->query($update_q);
-
-	((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
-}
+			// Login successful
+			$html .= "<p>Welcome to the password protected area {$user}</p>";
+			$html .= "<img src=\"{$avatar}\" />";
+			$visits_count = 0;
+		}
+		else {
+		//Login failed
+			$html .= "<pre><br />Username and/or password incorrect.</pre>";
+			$visits_count = $visits_count + 1;
+		}
+	
+		
+		$update_q = "UPDATE visits SET count = $visits_count WHERE ip = '$ip'";
+		$connection->query($update_q);
+	
+		((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+	}
+	}
 
 ?>

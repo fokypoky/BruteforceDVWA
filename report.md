@@ -55,9 +55,11 @@ CWE (база данных cwe.mitre.org)</h3>
 <ol>
     <li>CWE-89. Возможно использование SQL инъекции при определении запроса $query. Как вариант решения проблемы - использование параметризированных запросов</li>
     <li>CWE-79. Не защищенный вывод. В выражениях вида $html .= "какой-то текст и разметка..." возникает уязвимость к XSS атакам - злоумыщленник может внедрить свой JavaScript код</li>
-    <li>CWE-522. Пароли хранятся в недостаточно надежном виде. Лучше для каждого пользователя определять уникальное значение(соль), добавлять его к паролю и хэшировать. Таким образом, даже для пользователей с одинаковыми паролями хэши будут разными</li>
+    <li>CWE-522. Пароли хранятся в недостаточно надежном виде - используется md5.</li>
     <li>CWE-20. Отсутствие валидации ввода. Необходимо обрабатывать введенные данные перед их использованием</li>
     <li>CWE-307. Отсутствие защиты от неудачных попыток входа. Предоставляет возможность, например, перебора паролей</li>
+	<li>CWE-759. Хранение паролей без соли.  Лучше для каждого пользователя определять уникальное значение(соль), добавлять его к паролю и хэшировать. Таким образом, даже для пользователей с одинаковыми паролями хэши будут разными</li>
+	<li>CWE-807. Использование ненадежных входных данных при принятии решения о безопасности</li>
 
 </ol>
 
@@ -79,12 +81,16 @@ CWE (база данных cwe.mitre.org)</h3>
 </pre>
 <p>Теперь реализуем блокировку</p>
 <p>
-
-    if( isset( $_GET[ 'Login' ] ) ) {
-
+	
+	if( isset( $_GET[ 'Login' ] ) ) {
+	// Get username
 	$user = $_GET[ 'username' ];
+
+	// Get password
 	$pass = $_GET[ 'password' ];
 	$pass = md5( $pass );
+
+	// Check the database
 	$query  = "SELECT * FROM `users` WHERE user = '$user' AND password = '$pass';";
 	$result = mysqli_query($GLOBALS["___mysqli_ston"],  $query ) or die( '<pre>' . ((is_object($GLOBALS["___mysqli_ston"])) ? mysqli_error($GLOBALS["___mysqli_ston"]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . '</pre>' );
 	
@@ -112,28 +118,33 @@ CWE (база данных cwe.mitre.org)</h3>
 
 	if ($visits_count > 3) {
 		$html .= "<p>Too many requests!</p>";
+		//die();
 	}
-
-	if( $result && mysqli_num_rows( $result ) == 1 ) {
-		// Get users details
-		$row    = mysqli_fetch_assoc( $result );
-		$avatar = $row["avatar"];
-
-		// Login successful
-		$html .= "<p>Welcome to the password protected area {$user}</p>";
-		$html .= "<img src=\"{$avatar}\" />";
-		$visits_count = 0;
-	}
-	else {
-		// Login failed
-		$html .= "<pre><br />Username and/or password incorrect.</pre>";
-		$visits_count = $visits_count + 1;
-	}
-
+	else{
+		if( $result && mysqli_num_rows( $result ) == 1 ) {
+			// Get users details
+			$row    = mysqli_fetch_assoc( $result );
+			$avatar = $row["avatar"];
 	
-	$update_q = "UPDATE visits SET count = $visits_count WHERE ip = '$ip'";
-	$connection->query($update_q);
+			// Login successful
+			$html .= "<p>Welcome to the password protected area {$user}</p>";
+			$html .= "<img src=\"{$avatar}\" />";
+			$visits_count = 0;
+		}
+		else {
+			//Login failed
+			$html .= "<pre><br />Username and/or password incorrect.</pre>";
+			$visits_count = $visits_count + 1;
+		}
+	
+		
+		$update_q = "UPDATE visits SET count = $visits_count WHERE ip = '$ip'";
+		$connection->query($update_q);
+	
+		((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
+	
+	}
 
-	((is_null($___mysqli_res = mysqli_close($GLOBALS["___mysqli_ston"]))) ? false : $___mysqli_res);
-    }
+	}
+
 </p>
