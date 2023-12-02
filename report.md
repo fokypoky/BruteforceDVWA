@@ -148,12 +148,4 @@ CWE (база данных cwe.mitre.org)</h3>
 	}
 
 </p>
-<<<<<<< HEAD
 ![Alt text](https://github.com/fokypoky/BruteforceDVWA/blob/main/analyze-result.png?raw=true)
-=======
-<<<<<<< HEAD
-![Alt text](https://github.com/fokypoky/BruteforceDVWA/blob/main/analyze-result.png?raw=true)
-=======
-![Alt text](.analyze-result.png)
->>>>>>> d75d07c8b338614161bc3f51d53c995e5d455cc8
->>>>>>> 4678b6a994378c4ae2bae52a3cd82eabf507f79c
